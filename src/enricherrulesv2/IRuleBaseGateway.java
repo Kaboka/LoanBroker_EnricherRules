@@ -13,5 +13,5 @@ import java.util.ArrayList;
  * @author Kasper
  */
 public interface IRuleBaseGateway {
-    public ArrayList<String> getRules(String snn, int loanDuration, double loanAmount);
+    public String getRules(int creditScore, int loanDuration, double loanAmount);
 }
