@@ -8,7 +8,6 @@ import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.time.zone.ZoneRulesProvider;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
