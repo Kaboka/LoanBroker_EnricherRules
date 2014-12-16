@@ -19,37 +19,32 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import utilities.xml.xmlMapper;
 
 public class EnricherRules {
 
-    private static final String EXCHANGE_NAME = "translator_exchange_topic";
-    private static final String IN_QUEUE_NAME = "enricher_rules";
+    private static final String EXCHANGE_NAME = "ex_translators_gr1";
+    private static final String IN_QUEUE_NAME = "enricher_rules_gr1";
     
     public static void main(String[] args) throws IOException {
         ConnectionCreator creator = ConnectionCreator.getInstance();
-        Channel channel = creator.createChannel();
-        //mangler exchange og bind
-        channel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
-        channel.exchangeDeclare(EXCHANGE_NAME, "topic");
-        
-        QueueingConsumer consumer = new QueueingConsumer(channel);
-        channel.basicConsume(IN_QUEUE_NAME, consumer);
-//        System.out.println("Loanbroker.CreditScore: " + creditScore(ssn));
+        Channel inChannel = creator.createChannel();
+        Channel outChannel = creator.createChannel();
+        inChannel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
+        outChannel.exchangeDeclare(EXCHANGE_NAME, "topic");
+        QueueingConsumer consumer = new QueueingConsumer(inChannel);
+        inChannel.basicConsume(IN_QUEUE_NAME, consumer);
 
         while (true) {
             QueueingConsumer.Delivery delivery = null;
             try {
                 delivery = consumer.nextDelivery();
-                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                inChannel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                 String message = new String(delivery.getBody());
                 System.out.println("Message: " + message);
                 String severity = getRules(message);
-                channel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            } catch (ShutdownSignalException ex) {
-                ex.printStackTrace();
-            } catch (ConsumerCancelledException ex) {
+                outChannel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
+            } catch (InterruptedException | ShutdownSignalException | ConsumerCancelledException ex) {
                 ex.printStackTrace();
             }
         }
@@ -58,22 +53,13 @@ public class EnricherRules {
     private static String getRules(String xmlMessage) {
         String rules = "";
         IRuleBaseGateway gateway = new RuleBaseGateway();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
         try {
-            builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xmlMessage.getBytes()));
+            Document doc = xmlMapper.getXMLDocument(xmlMessage);
             XPath xPath = XPathFactory.newInstance().newXPath();
             int creditScore = Integer.parseInt(xPath.compile("/LoanRequest/creditScore").evaluate(doc));
             int loanDuration = Integer.parseInt(xPath.compile("/LoanRequest/loanDuration").evaluate(doc));
             double loanAmount = Double.parseDouble(xPath.compile("/LoanRequest/loanAmount").evaluate(doc));
             rules = gateway.getRules(creditScore, loanDuration, loanAmount);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(EnricherRules.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(EnricherRules.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(EnricherRules.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XPathExpressionException ex) {
             Logger.getLogger(EnricherRules.class.getName()).log(Level.SEVERE, null, ex);
         }
