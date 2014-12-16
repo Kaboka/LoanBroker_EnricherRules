@@ -6,6 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
+import dk.cphbusiness.connection.ConnectionCreator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -25,13 +26,8 @@ public class EnricherRules {
     private static final String IN_QUEUE_NAME = "enricher_rules";
     
     public static void main(String[] args) throws IOException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername("student");
-        factory.setPassword("cph");
-        factory.setHost("datdb.cphbusiness.dk");
-
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
+        ConnectionCreator creator = ConnectionCreator.getInstance();
+        Channel channel = creator.createChannel();
         //mangler exchange og bind
         channel.queueDeclare(IN_QUEUE_NAME, false, false, false, null);
         channel.exchangeDeclare(EXCHANGE_NAME, "topic");
