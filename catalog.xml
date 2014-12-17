@@ -2,4 +2,6 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://localhost:8080/LoanRuleBase/RuleBaseWebService?wsdl" uri="xml-resources/web-service-references/RuleBaseWebService/wsdl/localhost_8080/LoanRuleBase/RuleBaseWebService.wsdl"/>
     <system systemId="http://localhost:8080/LoanRuleBase/RuleBaseWebService?xsd=1" uri="xml-resources/web-service-references/RuleBaseWebService/wsdl/localhost_8080/LoanRuleBase/RuleBaseWebService.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/RuleBaseWebService/RuleBaseWebService?wsdl" uri="xml-resources/web-service-references/RuleBaseWebService/wsdl/localhost_8080/RuleBaseWebService/RuleBaseWebService.wsdl"/>
+    <system systemId="http://localhost:8080/RuleBaseWebService/RuleBaseWebService?xsd=1" uri="xml-resources/web-service-references/RuleBaseWebService/wsdl/localhost_8080/RuleBaseWebService/RuleBaseWebService.xsd_1.xsd"/>
 </catalog>

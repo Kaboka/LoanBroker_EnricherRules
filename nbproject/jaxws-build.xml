@@ -18,8 +18,8 @@
     </target>
     <target name="wsimport-client-RuleBaseWebService" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/RuleBaseWebService"/>
-        <property name="wsdl-RuleBaseWebService" location="xml-resources/web-service-references/RuleBaseWebService/wsdl/localhost_8080/LoanRuleBase/RuleBaseWebService.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/RuleBaseWebService" destdir="${build.generated.dir}/jax-wsCache/RuleBaseWebService" wsdl="${wsdl-RuleBaseWebService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/LoanRuleBase/RuleBaseWebService?wsdl" xnocompile="true" xendorsed="true">
+        <property name="wsdl-RuleBaseWebService" location="xml-resources/web-service-references/RuleBaseWebService/wsdl/localhost_8080/RuleBaseWebService/RuleBaseWebService.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/RuleBaseWebService" destdir="${build.generated.dir}/jax-wsCache/RuleBaseWebService" wsdl="${wsdl-RuleBaseWebService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/RuleBaseWebService/RuleBaseWebService?wsdl" xnocompile="true" xendorsed="true" package="ws">
             <depends file="${wsdl-RuleBaseWebService}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/RuleBaseWebService"/>
         </wsimport>
@@ -31,7 +31,7 @@
     </target>
     <target name="wsimport-client-clean-RuleBaseWebService" depends="-init-project">
         <delete dir="${build.generated.dir}/jax-wsCache/RuleBaseWebService"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/loanbroker/webservice"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/ws"/>
     </target>
     <target name="wsimport-client-generate" depends="wsimport-client-RuleBaseWebService"/>
 </project>

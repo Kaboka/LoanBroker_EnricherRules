@@ -2,24 +2,17 @@ package enricherrulesv2;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 import dk.cphbusiness.connection.ConnectionCreator;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 import utilities.xml.xmlMapper;
 
 public class EnricherRules {
@@ -47,6 +40,7 @@ public class EnricherRules {
                 String severity = getRules(message);
                 AMQP.BasicProperties props = new AMQP.BasicProperties().builder().correlationId(correlationId).build();
                 outChannel.basicPublish(EXCHANGE_NAME, severity, props, message.getBytes());
+                System.out.println("Publish: " + message);
             } catch (InterruptedException | ShutdownSignalException | ConsumerCancelledException ex) {
                 ex.printStackTrace();
             }
