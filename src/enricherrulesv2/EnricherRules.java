@@ -41,6 +41,7 @@ public class EnricherRules {
                 AMQP.BasicProperties props = new AMQP.BasicProperties().builder().correlationId(correlationId).build();
                 outChannel.basicPublish(EXCHANGE_NAME, severity, props, message.getBytes());
                 System.out.println("Publish: " + message);
+                System.out.println("rule: " + severity);
             } catch (InterruptedException | ShutdownSignalException | ConsumerCancelledException ex) {
                 ex.printStackTrace();
             }
