@@ -1,5 +1,6 @@
 package enricherrulesv2;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -25,6 +26,7 @@ public class EnricherRules {
 
     private static final String EXCHANGE_NAME = "ex_translators_gr1";
     private static final String IN_QUEUE_NAME = "enricher_rules_gr1";
+    private static String correlationId = "1";
     
     public static void main(String[] args) throws IOException {
         ConnectionCreator creator = ConnectionCreator.getInstance();
@@ -43,7 +45,8 @@ public class EnricherRules {
                 String message = new String(delivery.getBody());
                 System.out.println("Message: " + message);
                 String severity = getRules(message);
-                outChannel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
+                AMQP.BasicProperties props = new AMQP.BasicProperties().builder().correlationId(correlationId).build();
+                outChannel.basicPublish(EXCHANGE_NAME, severity, props, message.getBytes());
             } catch (InterruptedException | ShutdownSignalException | ConsumerCancelledException ex) {
                 ex.printStackTrace();
             }

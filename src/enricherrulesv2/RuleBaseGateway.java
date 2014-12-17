@@ -14,9 +14,9 @@ public class RuleBaseGateway implements IRuleBaseGateway{
     @Override
     public String getRules(int creditScore, int loanDuration, double loanAmount) {
         
-       // loanbroker.webservice.RuleBaseWebService_Service service = new loanbroker.webservice.RuleBaseWebService_Service();
-       // loanbroker.webservice.RuleBaseWebService port = service.getRuleBaseWebServicePort();
-        return ""; // port.getRules(creditScore, loanDuration, loanAmount);
+       loanbroker.webservice.RuleBaseWebService_Service service = new loanbroker.webservice.RuleBaseWebService_Service();
+       loanbroker.webservice.RuleBaseWebService port = service.getRuleBaseWebServicePort();
+        return port.getRules(creditScore, loanDuration, loanAmount);
        
     }
     
